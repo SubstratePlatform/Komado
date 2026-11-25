@@ -1,0 +1,29 @@
+name: no_std Checks
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  bare-metal:
+    name: Build without std or alloc
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: thumbv7em-none-eabihf
+
+      - name: Cache cargo
+        uses: Swatinem/rust-cache@v2
+
+      - name: Build workspace for a bare metal target
+        run: cargo build --workspace --target thumbv7em-none-eabihf
