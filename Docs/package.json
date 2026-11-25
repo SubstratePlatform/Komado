@@ -1,0 +1,24 @@
+{
+  "name": "komado-docs",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "make-pretty": "prettier . --write",
+    "make-pretty:check": "prettier . --check",
+    "dev": "docmd dev",
+    "build": "docmd build",
+    "preview": "npx serve site"
+  },
+  "dependencies": {
+    "@docmd/core": "^0.10.1"
+  },
+  "devDependencies": {
+    "@eslint/js": "10.0.1",
+    "eslint": "10.13.0",
+    "eslint-config-prettier": "10.1.8",
+    "globals": "17.13.0",
+    "prettier": "3.9.10"
+  }
+}

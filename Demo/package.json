@@ -1,0 +1,50 @@
+{
+  "name": "komado-demo",
+  "version": "0.1.0",
+  "description": "placeholder",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "make-pretty": "prettier . --write",
+    "make-pretty:check": "prettier . --check",
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "export": "node export.mjs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SubstratePlatform/Komado.git"
+  },
+  "keywords": [
+    "offline",
+    "pwa",
+    "html-css-javascript",
+    "htmltoolkit"
+  ],
+  "author": "NellowTCS",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/SubstratePlatform/Komado/issues"
+  },
+  "homepage": "https://github.com/SubstratePlatform/Komado#readme",
+  "dependencies": {
+    "vite": "^8.3.5"
+  },
+  "devDependencies": {
+    "@eslint/css": "^2.0.1",
+    "@eslint/js": "^10.0.1",
+    "@eslint/json": "^2.1.1",
+    "@eslint/markdown": "^8.0.3",
+    "babel-jest": "^30.5.2",
+    "eslint": "^10.13.0",
+    "eslint-config-prettier": "10.1.8",
+    "fs-extra": "^11.4.1",
+    "globals": "^17.13.0",
+    "prettier": "3.9.10",
+    "rimraf": "^6.1.3",
+    "vite-plugin-pwa": "^2.0.0"
+  }
+}
