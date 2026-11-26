@@ -14,17 +14,22 @@ impl Crc32 {
         Self { state: u32::MAX }
     }
 
-    /// Feeds `bytes` into the accumulator thing
+    /// Feeds `bytes` into the accumulator
     pub fn update(&mut self, bytes: &[u8]) {
         for &byte in bytes {
-            self.state ^= byte as u32;
-            for _ in 0..8 {
-                self.state = if self.state & 1 != 0 {
-                    (self.state >> 1) ^ Self::POLYNOMIAL
-                } else {
-                    self.state >> 1
-                };
-            }
+            self.update_byte(byte);
+        }
+    }
+
+    /// Feeds a streamed byte into the accumulator
+    pub fn update_byte(&mut self, byte: u8) {
+        self.state ^= byte as u32;
+        for _ in 0..8 {
+            self.state = if self.state & 1 != 0 {
+                (self.state >> 1) ^ Self::POLYNOMIAL
+            } else {
+                self.state >> 1
+            };
         }
     }
 

@@ -3,10 +3,26 @@ use crate::{Error, Result};
 /// Random-access byte storage given by caller (aka, the output area)
 pub trait Canvas {
     /// Reads the byte at row `row`, byte column `column`
-    fn get_byte(&self, row: u32, column: u32) -> Result<u8>;
+    fn get_byte(&mut self, row: u32, column: u32) -> Result<u8>;
 
     /// Writes `value` at row `row`, byte column `column`
     fn set_byte(&mut self, row: u32, column: u32, value: u8) -> Result<()>;
+
+    /// Commits any cached writes
+    fn flush(&mut self) -> Result<()> {
+        Ok(())
+    }
+}
+
+/// Write-only display surface given by the caller
+pub trait PixelSink {
+    /// One row of already-composited bytes
+    fn present_row(&mut self, row: u32, bytes: &[u8]) -> Result<()>;
+
+    /// Commits any cached output
+    fn flush(&mut self) -> Result<()> {
+        Ok(())
+    }
 }
 
 /// A flat [`Canvas`] slice
@@ -38,7 +54,7 @@ impl<'a> FlatCanvas<'a> {
 }
 
 impl Canvas for FlatCanvas<'_> {
-    fn get_byte(&self, row: u32, column: u32) -> Result<u8> {
+    fn get_byte(&mut self, row: u32, column: u32) -> Result<u8> {
         let offset = self.offset(row, column)?;
         Ok(self.bytes[offset])
     }

@@ -16,17 +16,22 @@ impl Adler32 {
         Self { a: 1, b: 0 }
     }
 
-    /// Feeds `bytes` into the accumulator thing
+    /// Feeds `bytes` into the accumulator
     pub fn update(&mut self, bytes: &[u8]) {
         for &byte in bytes {
-            self.a += byte as u32;
-            if self.a >= Self::BASE {
-                self.a -= Self::BASE;
-            }
-            self.b += self.a;
-            if self.b >= Self::BASE {
-                self.b -= Self::BASE;
-            }
+            self.update_byte(byte);
+        }
+    }
+
+    /// Feeds a decompressed byte into the accumulator
+    pub fn update_byte(&mut self, byte: u8) {
+        self.a += byte as u32;
+        if self.a >= Self::BASE {
+            self.a -= Self::BASE;
+        }
+        self.b += self.a;
+        if self.b >= Self::BASE {
+            self.b -= Self::BASE;
         }
     }
 

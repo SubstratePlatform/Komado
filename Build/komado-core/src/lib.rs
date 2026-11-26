@@ -11,7 +11,7 @@ mod huffman;
 mod source;
 
 pub use bits::BitReader;
-pub use canvas::{Canvas, FlatCanvas};
+pub use canvas::{Canvas, FlatCanvas, PixelSink};
 pub use checksum::{Adler32, Crc32};
 pub use error::{Error, Result};
 pub use huffman::{Huffman, MAX_CODE_LENGTH};

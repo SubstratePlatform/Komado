@@ -8,15 +8,16 @@ use crate::{ByteSource, Error, Result};
 ///
 /// DEFLATE stores Huffman codes MSB (most significant bit) first inside bytes whose
 /// bits are otherwise consumed LSB first which is... weird
-pub struct BitReader<S> {
-    source: S,
+pub struct BitReader<'a, S: ?Sized> {
+    source: &'a mut S,
     buffer: u32,
     bits: u8,
 }
 
-impl<S: ByteSource> BitReader<S> {
+/// ever wanted to see esoteric Rust? congrats you have
+impl<'a, S: ByteSource + ?Sized> BitReader<'a, S> {
     /// Creates a reader over `source` w/o buffered bits
-    pub const fn new(source: S) -> Self {
+    pub const fn new(source: &'a mut S) -> Self {
         Self {
             source,
             buffer: 0,
@@ -89,11 +90,11 @@ impl<S: ByteSource> BitReader<S> {
 
     /// Returns a mutable reference to src
     pub fn source_mut(&mut self) -> &mut S {
-        &mut self.source
+        self.source
     }
 
     /// Consumes reader and return sourcen
-    pub fn into_inner(self) -> S {
+    pub fn into_inner(self) -> &'a mut S {
         self.source
     }
 }

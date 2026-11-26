@@ -17,8 +17,25 @@ pub struct Huffman<const N: usize> {
 }
 
 impl<const N: usize> Huffman<N> {
+    /// Creates an empty table
+    pub const fn empty() -> Self {
+        Self {
+            counts: [0; MAX_CODE_LENGTH + 1],
+            first_code: [0; MAX_CODE_LENGTH + 1],
+            first_index: [0; MAX_CODE_LENGTH + 1],
+            symbols: [0; N],
+        }
+    }
+
     /// Builds a decoder from one code length per symbol thing
     pub fn new(lengths: &[u8]) -> Result<Self> {
+        let mut table = Self::empty();
+        table.build_into(lengths)?;
+        Ok(table)
+    }
+
+    /// Rebuilds `self`
+    pub fn build_into(&mut self, lengths: &[u8]) -> Result<()> {
         if lengths.len() != N {
             return Err(Error::InvalidHuffmanCode);
         }
@@ -51,26 +68,27 @@ impl<const N: usize> Huffman<N> {
             index += counts[length];
         }
 
+        self.counts = counts;
+        self.first_code = first_code;
+        self.first_index = first_index;
+        for symbol in self.symbols.iter_mut() {
+            *symbol = 0;
+        }
+
         let mut cursor = first_index;
-        let mut symbols = [0u16; N];
         for (symbol, &length) in lengths.iter().enumerate() {
             if length != 0 {
                 let slot = cursor[length as usize] as usize;
-                symbols[slot] = symbol as u16;
+                self.symbols[slot] = symbol as u16;
                 cursor[length as usize] += 1;
             }
         }
 
-        Ok(Self {
-            counts,
-            first_code,
-            first_index,
-            symbols,
-        })
+        Ok(())
     }
 
     /// Decodes one symbol from `reader`
-    pub fn decode<S: ByteSource>(&self, reader: &mut BitReader<S>) -> Result<u16> {
+    pub fn decode<S: ByteSource + ?Sized>(&self, reader: &mut BitReader<'_, S>) -> Result<u16> {
         let mut code = 0u32;
         for length in 1..=MAX_CODE_LENGTH {
             code = (code << 1) | reader.read_bits_lsb(1)? as u32;
